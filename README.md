@@ -1,7 +1,7 @@
 # prodreq-automator
 Automates creation of requests on the Producer Dashboard.
 
-*Download Instructions*
+*Installation Instructions*
 
 1. `cd prodreq-automator`
 2. `npm i`
