@@ -9,7 +9,7 @@
 const webdriverio = require('webdriverio');
 
 // Config
-const OPTIONS = { desiredCapabilities: { browserName: 'firefox' } };
+const OPTIONS = { desiredCapabilities: { browserName: 'chrome' } };
 
 // Client Class
 
