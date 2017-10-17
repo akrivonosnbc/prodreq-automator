@@ -8,6 +8,7 @@
 // Imports
 const chromedriver = require('chromedriver');
 const bureau_camera = require('./requests/crew/types/bureau_camera.js');
+const breaking_news = require('./requests/crew/types/breaking_news.js');
 
 // Config
 // Clear before committing
@@ -23,6 +24,9 @@ const LOOP_COUNT = 10;
 
 chromedriver.start(DRIVER_ARGS);
 
-bureau_camera.loop(USERNAME, PASSWORD, LOOP_COUNT, BROWSER_INSTANCES).then(() => {
-      chromedriver.stop();
-});
+//breaking_news.breakingNews(USERNAME, PASSWORD);
+bureau_camera.bureauCamera(USERNAME, PASSWORD);
+
+// bureau_camera.loop(USERNAME, PASSWORD, LOOP_COUNT, BROWSER_INSTANCES).then(() => {
+//       chromedriver.stop();
+// });

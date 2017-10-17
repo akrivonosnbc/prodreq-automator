@@ -10,11 +10,13 @@ const webdriverio = require('webdriverio');
 
 // Config
 const OPTIONS = { desiredCapabilities: { browserName: 'chrome' } };
+const URL = "https://stgconnect.inbcu.com/sites/bcast_prodreq/";
 
 // Client Class
 
 function Client (url, username = null, password = null) {
-      console.log("Created new Driver Client");
+      if (url == null) url = URL;
+      console.log(`Created new Driver Client with URL ${url}`);
       var env = this, authUrl;
 
       // Authentication

@@ -15,16 +15,20 @@ const TEST_DATA = {
       STORY: 'ABC News and GMA Twitter Accounts Hacked',
       SHOW_UNIT: 'Dateline',
       BUDGET_CODE: '1234',
+      BUREAU_LOCATION: 'NEW YORK BUREAU',
       DESCRIPTION: 'Test Description'
 }
 
-// Crew Class
+// BureauCamera Class
 let bureauCamera = (username = null, password = null) => {
       return new Promise((resolve, reject) => {
             new crew.Client(username, password)
+
+                  //Initialize
                   .getUrl().then((url) => {
                         console.log('Created new Bureau Camera Client at ' + url);
                   })
+                  .pause(10000)
 
                   // Presses button to initiate Bureau Camera Crew Request
                   .click('*[title="Bureau Camera"]').then(() => {
@@ -47,15 +51,12 @@ let bureauCamera = (username = null, password = null) => {
                   .setValue('#shootdesc-bc=', TEST_DATA.DESCRIPTION).then(() => {
                         console.log(`Set shoot description to: ${TEST_DATA.DESCRIPTION}\n\n`);
                   }).catch((e)=>console.error(`Could not set shoot description: ${e}`))
-
                   .click('#txtStoryName-bc').then(() => {
                         console.log(`Clicked on story\n\n`);
                   }).catch((e)=>console.error(`Could not click on story\n\n`))
-
                   .setValue('#txtStoryName-bc', TEST_DATA.STORY.substring(0,3) + ' ').then(() => {
                         console.log(`Set story to: ${TEST_DATA.STORY}\n\n`);
                   }).catch((e)=>console.error(`Could not set story: ${e}`))
-
                   .pause(1000)
                   .keys('Enter').then(()=>console.log(`Enter pressed.`)).catch(e=>console.error(`Could not press enter`))
                   .pause(1000)
@@ -64,7 +65,6 @@ let bureauCamera = (username = null, password = null) => {
                   .click('#txtUnit-Bureau_0').then(() => {
                         console.log(`Clicked on show unit\n\n`);
                   }).catch((e)=>console.error(`Could not click on show unit\n\n`))
-
                   .addValue('#txtUnit-Bureau_0', TEST_DATA.SHOW_UNIT).then(() => {
                         console.log(`Set show unit to: ${TEST_DATA.SHOW_UNIT}\n\n`);
                   }).catch((e)=>console.error(`Could not set show unit: ${e}`))
@@ -74,10 +74,9 @@ let bureauCamera = (username = null, password = null) => {
                   .pause(1000)
 
                   // Sets Bureau Location
-                  .selectByIndex('#bureaulocation-bc', 1).then(() => {
-                        console.log(`Selected first bureau location\n\n`);
-                  }).catch((e)=>console.error(`Could not select bureau location: ${e}`))
-
+                  .selectByValue('#bureaulocation-bc', TEST_DATA.BUREAU_LOCATION).then(() => {
+                        console.log(`Selected ${TEST_DATA.BUREAU_LOCATION} as bureau location\n\n`);
+                  }).catch((e)=>console.error(`Could not select ${TEST_DATA.BUREAU_LOCATION} as bureau location: ${e}`))
                   .setValue('#meettime-hr-bc', '12').then(() => {
                         console.log(`Set meet hour to 12.\n\n`);
                   }).catch((e)=>console.error(`Could not set meet hour: ${e}`))
@@ -87,15 +86,25 @@ let bureauCamera = (username = null, password = null) => {
                         console.log(`Set budget code to: ${TEST_DATA.BUDGET_CODE}\n\n`);
                   }).catch((e)=>console.error(`Could not set budget code: ${e}`))
 
+                  // Submit form
                   .click('*[title="bcSubmit"]').then(() => {
                         console.log(`Clicked Submit.\n\n`);
                   }).catch((e)=>console.error(`Could not click Submit: ${e}`))
+                  .pause(1000)
 
-                  .end().then(() => {
-                        resolve();
-                  }).catch(() => {
-                        reject();
-                  });
+                  .click('.button-close').then(() => {
+                        console.log(`Clicked Close.\n\n`);
+                  }).catch((e)=>console.error(`Could not click Close: ${e}`))
+                  .pause(500)
+
+                  // Ends program
+                  // .end().then(() => {
+                  //       console.log(`Closed Bureau Camera window.\n\n`);
+                  //       resolve();
+                  // }).catch(() => {
+                  //       console.log(`Could not close Bureau Camera window.\n\n`);
+                  //       reject();
+                  // });
       });
 }
 
