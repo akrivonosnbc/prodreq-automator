@@ -6,27 +6,102 @@
 */
 
 // Imports
+const argv = require('yargs').argv;
+const isOnline = require('is-online');
 const chromedriver = require('chromedriver');
 const bureau_camera = require('./requests/crew/types/bureau_camera.js');
 const breaking_news = require('./requests/crew/types/breaking_news.js');
 
 // Config
-// Clear before committing
-const DRIVER_ARGS = [
-    // optional arguments
-];
+const DRIVER_ARGS = [ /* optional arguments */ ];
+const DEFAULT_PROCESS = {
+      DEVICE: 'desktop',
+      REQUEST: 'crew',
+      TYPE: 'bureau_camera',
+      LOOP: false,
+      COUNT: 1,
+      INSTANCES: 1
+};
 
-const USERNAME = '206531939';
-const PASSWORD = 'D@sha12345'
+let main = () => {
+      chromedriver.start(DRIVER_ARGS);
 
-const BROWSER_INSTANCES = 5;
-const LOOP_COUNT = 10;
+      checkEnvironment().then((credentials) => {
+            checkProcess(credentials.username, credentials.password)
+                  .then(() => chromedriver.stop())
+                  .catch(() => chromedriver.stop());
+      }).catch(() => process.exit(1));
+};
 
-chromedriver.start(DRIVER_ARGS);
+let checkEnvironment = () => {
+      return new Promise((resolve, reject) => {
+            if (argv) {
+                  var username = argv.username || argv.u, password = argv.password || argv.p;
+                  if (username && password) return resolve({username, password});
+                  else if (!username) {
+                        console.error('Could not retrieve username.');
+                        return reject();
+                  }
+                  else if (!password) {
+                        console.error('Could not retrieve password.');
+                        return reject();
+                  }
+            } else {
+                  console.error('Could not retrieve arguments.');
+                  return reject();
+            }
+      });
+};
 
-//breaking_news.breakingNews(USERNAME, PASSWORD);
-bureau_camera.bureauCamera(USERNAME, PASSWORD);
+let checkProcess = (username, password) => {
+      return new Promise((resolve, reject) => {
+            if (argv) {
+                  var device = (argv.device || argv.device || DEFAULT_PROCESS.DEVICE || "").trim().toLowerCase()
+                        request = (argv.request || argv.r || DEFAULT_PROCESS.REQUEST || "").trim().toLowerCase(),
+                        type = (argv.type || argv.t || DEFAULT_PROCESS.TYPE || "").trim().toLowerCase(),
+                        loop = (argv.loop || argv.l || DEFAULT_PROCESS.LOOP || "").trim().toLowerCase() === 'true',
+                        count = loop ? (argv.count || argv.c || DEFAULT_PROCESS.COUNT || 1) : 1,
+                        instances = loop ? (argv.instances || argv.instance || argv.i || DEFAULT_PROCESS.INSTANCES || 1) : 1;
+                  switch (request) {
+                        case 'crew':
+                              switch (type) {
+                                    case 'bureau_camera':
+                                          bureau_camera.loop(device, username, password, count, instances).then(() => resolve());
+                                          break;
+                                    case 'breaking_news':
+                                          break;
+                                    case 'general':
+                                          break;
+                                    default:
+                                          break;
+                              }
+                              break;
+                        case 'edit':
+                              switch (type) {
+                                    case 'standard':
+                                          break;
+                                    case 'long':
+                                          break;
+                                    case 'msnbc':
+                                          break;
+                                    case 'am':
+                                          break;
+                                    default:
+                                          break;
+                              }
+                              break;
+                        case 'file_ingest':
+                              break;
+                        case 'studio':
+                              break;
+                        default:
+                              break;
+                  }
+            } else {
+                  console.error('Could not retrieve arguments.');
+                  return reject();
+            }
+      });
+};
 
-// bureau_camera.loop(USERNAME, PASSWORD, LOOP_COUNT, BROWSER_INSTANCES).then(() => {
-//       chromedriver.stop();
-// });
+main();
