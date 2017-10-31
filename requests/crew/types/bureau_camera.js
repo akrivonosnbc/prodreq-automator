@@ -164,18 +164,18 @@ let loop = (device, username, password, count, instances) => {
       return new Promise((resolve, reject) => {
             for (var i = 0; i < instances; i++) {
                   loopInstance(device, username, password, count, () => {
-                        if (i >= instances - 1) return resolve();
+                        if (i == instances) return resolve();
                   });
             }
       });
 }
 
 let loopInstance = (device, username, password, count, terminate = null) => {
-      if (count >= 0) {
+      if (count > 0) {
             bureauCamera(device, username, password).then(() => {
-                  return loopInstance(device, username, password, --count, terminate = null);
+                  return loopInstance(device, username, password, --count, terminate);
             }).catch(() => {
-                  return loopInstance(device, username, password, --count, terminate = null);
+                  return loopInstance(device, username, password, --count, terminate);
             });
       } else if (terminate) return terminate();
 }

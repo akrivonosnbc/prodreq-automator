@@ -11,6 +11,7 @@ const isOnline = require('is-online');
 const chromedriver = require('chromedriver');
 const bureau_camera = require('./requests/crew/types/bureau_camera.js');
 const breaking_news = require('./requests/crew/types/breaking_news.js');
+const general = require('./requests/crew/types/general.js');
 
 // Config
 const DRIVER_ARGS = [ /* optional arguments */ ];
@@ -30,7 +31,10 @@ let main = () => {
             checkProcess(credentials.username, credentials.password)
                   .then(() => chromedriver.stop())
                   .catch(() => chromedriver.stop());
-      }).catch(() => process.exit(1));
+      }).catch(() => {
+            chromedriver.stop();
+            process.exit(1);
+      });
 };
 
 let checkEnvironment = () => {
@@ -69,10 +73,13 @@ let checkProcess = (username, password) => {
                                           bureau_camera.loop(device, username, password, count, instances).then(() => resolve());
                                           break;
                                     case 'breaking_news':
+                                          breaking_news.loop(device, username, password, count, instances).then(() => resolve());
                                           break;
                                     case 'general':
+                                          general.loop(device, username, password, count, instances).then(() => resolve());
                                           break;
                                     default:
+                                          reject();
                                           break;
                               }
                               break;
