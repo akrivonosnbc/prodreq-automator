@@ -1,17 +1,15 @@
 /*
       Anthony Krivonos
       Producer Request Automator
-      10/03/2017
-      /crew/crew.js
+      11/07/2017
+      /studio/studio.js
 */
 
 // Imports
 const driver = require('../../driver/driver.js');
 
 // Types
-let breaking_news = require('./types/breaking_news.js');
-let bureau_camera = require('./types/bureau_camera.js');
-let general = require('./types/general.js');
+let single_camera = require('./types/single_camera.js');
 
 // Config
 const WINDOW_SIZE = {
@@ -25,20 +23,20 @@ const WINDOW_SIZE = {
       }
 }
 
-// Crew Client Class
+// Studio Client Class
 function Client (device = 'desktop', username = null, password = null) {
       return new driver.Client(null, username, password)
             .setViewportSize(device == 'desktop' ? WINDOW_SIZE.DESKTOP : WINDOW_SIZE.MOBILE, false).then(() => {
                   console.log(`Set window size for ${device}`);
             }).catch((e)=>console.log(`Could not set window size: ${e}`))
-            .click('.producer-dashboard-newCrewRequest').then(() => {
-                  console.log(`Clicked on New Crew Request.\n\n`);
-            }).catch((e)=>console.error(`Could not click on New Crew Request: ${e}`))
+            .click('.producer-dashboard-newStudioRequest').then(() => {
+                  console.log(`Clicked on New Studio Request.\n\n`);
+            }).catch((e)=>console.error(`Could not click on New Studio Request: ${e}`))
             .getUrl().then((url) => {
-                  console.log('Created new Crew Request Client at ' + url);
+                  console.log('Created new Studio Request Client at ' + url);
             })
 }
 
 module.exports = {
-      Client, breaking_news, bureau_camera, general
+      Client, single_camera
 };

@@ -32,7 +32,7 @@ const TEST_DATA = {
             MINUTES: '00',
             TIME_OF_DAY: 'PM',
       }
-}
+};
 
 // BureauCamera Class
 let bureauCamera = (device = 'desktop', username = null, password = null) => {

@@ -7,11 +7,10 @@
 
 // Imports
 const argv = require('yargs').argv;
-const isOnline = require('is-online');
 const chromedriver = require('chromedriver');
-const bureau_camera = require('./requests/crew/types/bureau_camera.js');
-const breaking_news = require('./requests/crew/types/breaking_news.js');
-const general = require('./requests/crew/types/general.js');
+
+const crew = require('./requests/crew/crew.js');
+const studio = require('./requests/studio/studio.js');
 
 // Config
 const DRIVER_ARGS = [ /* optional arguments */ ];
@@ -35,6 +34,8 @@ let main = () => {
             chromedriver.stop();
             process.exit(1);
       });
+
+      process.on('exit', (code) => chromedriver.stop());
 };
 
 let checkEnvironment = () => {
@@ -70,13 +71,13 @@ let checkProcess = (username, password) => {
                         case 'crew':
                               switch (type) {
                                     case 'bureau_camera':
-                                          bureau_camera.loop(device, username, password, count, instances).then(() => resolve());
+                                          crew.bureau_camera.loop(device, username, password, count, instances).then(() => resolve());
                                           break;
                                     case 'breaking_news':
-                                          breaking_news.loop(device, username, password, count, instances).then(() => resolve());
+                                          crew.breaking_news.loop(device, username, password, count, instances).then(() => resolve());
                                           break;
                                     case 'general':
-                                          general.loop(device, username, password, count, instances).then(() => resolve());
+                                          crew.general.loop(device, username, password, count, instances).then(() => resolve());
                                           break;
                                     default:
                                           reject();
@@ -100,6 +101,21 @@ let checkProcess = (username, password) => {
                         case 'file_ingest':
                               break;
                         case 'studio':
+                              switch (type) {
+                                    case 'single_camera':
+                                          console.log(`Looping through studio single camera`);
+                                          studio.single_camera.loop(device, username, password, count, instances).then(() => {
+                                                console.log('Done');
+                                                resolve();
+                                          });
+                                          break;
+                                    case 'extend_or_bridge':
+                                          break;
+                                    case 'all':
+                                          break;
+                                    default:
+                                          break;
+                              }
                               break;
                         default:
                               break;

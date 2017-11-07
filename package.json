@@ -4,13 +4,15 @@
       "description": "Automater for Producer Request Dashboard.",
       "main": "index.js",
       "scripts": {
-            "start": "node index.js",
             "serve": "java -jar -Dwebdriver.gecko.driver=./geckodriver selenium-server-standalone-3.0.1.jar",
-            "test": "echo \"Error: no test specified\" && exit 1"
+            "test": "echo \"Error: no test specified\" && exit 1",
+            "start": "echo \"Error: must use flags\" && exit 1"
       },
       "author": "Anthony Krivonos",
       "license": "ISC",
       "dependencies": {
+            "chai": "^4.1.2",
+            "chai-webdriverio": "^0.4.2",
             "chromedriver": "^2.33.1",
             "jquery": "^3.2.1",
             "jsdom": "^11.3.0",
