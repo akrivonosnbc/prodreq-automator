@@ -8,9 +8,6 @@
 // Imports
 const driver = require('../../driver/driver.js');
 
-// Types
-let single_camera = require('./types/single_camera.js');
-
 // Config
 const WINDOW_SIZE = {
       DESKTOP: {
@@ -29,14 +26,14 @@ function Client (device = 'desktop', username = null, password = null) {
             .setViewportSize(device == 'desktop' ? WINDOW_SIZE.DESKTOP : WINDOW_SIZE.MOBILE, false).then(() => {
                   console.log(`Set window size for ${device}`);
             }).catch((e)=>console.log(`Could not set window size: ${e}`))
-            .click('.producer-dashboard-newStudioRequest').then(() => {
+            .leftClick('.producer-dashboard-newStudioRequest', 0, 0).then(() => {
                   console.log(`Clicked on New Studio Request.\n\n`);
             }).catch((e)=>console.error(`Could not click on New Studio Request: ${e}`))
             .getUrl().then((url) => {
                   console.log('Created new Studio Request Client at ' + url);
-            })
+            }).catch(() => console.log('Could not create new Studio Request Client'))
 }
 
 module.exports = {
-      Client, single_camera
+      Client
 };

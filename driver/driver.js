@@ -18,7 +18,7 @@ const OPTIONS = { desiredCapabilities: { browserName: 'chrome' } };
 const URL = "https://qatest.stgconnect.inbcu.com/sites/bcast_prodreq/Pages/producer-dashboard.aspx";
 
 // Client Class
-function Client (url, username = null, password = null) {
+function Client (url = null, username = null, password = null) {
       if (url == null) url = URL;
       console.log(`Created new Driver Client with URL ${url}`);
       var env = this, authUrl;

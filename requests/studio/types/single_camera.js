@@ -32,20 +32,14 @@ let singleCamera = (device = 'desktop', username = null, password = null) => {
                         console.log(`Clicked Single Camera Live Shot from Plaza Productions.\n\n`);
                   }).catch((e)=>console.error(`Could not click Single Camera Live Shot from Plaza Productions: ${e}`))
 
-                  .end().then(() => {
-                        console.log(`Closed General window.\n\n`);
-                        resolve();
-                  }).catch(() => {
-                        console.log(`Could not close General window.\n\n`);
-                        reject();
-                  })
-                  .end().then(() => {
-                        console.log(`Closed General window.\n\n`);
-                        resolve();
-                  }).catch(() => {
-                        console.log(`Could not close General window.\n\n`);
-                        reject();
-                  });
+                  // Ends program
+                  // .end().then(() => {
+                  //       console.log(`Closed General window.\n\n`);
+                  //       resolve();
+                  // }).catch(() => {
+                  //       console.log(`Could not close General window.\n\n`);
+                  //       reject();
+                  // });
       });
 }
 

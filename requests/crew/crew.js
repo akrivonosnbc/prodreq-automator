@@ -8,11 +8,6 @@
 // Imports
 const driver = require('../../driver/driver.js');
 
-// Types
-let breaking_news = require('./types/breaking_news.js');
-let bureau_camera = require('./types/bureau_camera.js');
-let general = require('./types/general.js');
-
 // Config
 const WINDOW_SIZE = {
       DESKTOP: {
@@ -40,5 +35,5 @@ function Client (device = 'desktop', username = null, password = null) {
 }
 
 module.exports = {
-      Client, breaking_news, bureau_camera, general
+      Client
 };

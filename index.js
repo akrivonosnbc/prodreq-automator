@@ -9,8 +9,14 @@
 const argv = require('yargs').argv;
 const chromedriver = require('chromedriver');
 
-const crew = require('./requests/crew/crew.js');
-const studio = require('./requests/studio/studio.js');
+const crew = {
+      breaking_news: require('./requests/crew/types/breaking_news.js'),
+      bureau_camera: require('./requests/crew/types/bureau_camera.js'),
+      general: require('./requests/crew/types/general.js')
+};
+const studio = {
+      single_camera: require('./requests/studio/types/single_camera.js')
+};
 
 // Config
 const DRIVER_ARGS = [ /* optional arguments */ ];
