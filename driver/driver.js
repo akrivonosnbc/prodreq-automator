@@ -14,8 +14,8 @@ chai.use(chaiWebdriver(webdriverio));
 
 // Config
 const OPTIONS = { desiredCapabilities: { browserName: 'chrome' } };
-//const URL = "https://stgconnect.inbcu.com/sites/bcast_prodreq/";
-const URL = "https://qatest.stgconnect.inbcu.com/sites/bcast_prodreq/Pages/producer-dashboard.aspx";
+const URL = "https://stgconnect.inbcu.com/sites/bcast_prodreq/"; // Staging
+//const URL = "https://qatest.stgconnect.inbcu.com/sites/bcast_prodreq/Pages/producer-dashboard.aspx"; // QA Testing
 
 // Client Class
 function Client (url = null, username = null, password = null) {

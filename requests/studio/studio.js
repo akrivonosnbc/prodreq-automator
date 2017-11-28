@@ -26,7 +26,7 @@ function Client (device = 'desktop', username = null, password = null) {
             .setViewportSize(device == 'desktop' ? WINDOW_SIZE.DESKTOP : WINDOW_SIZE.MOBILE, false).then(() => {
                   console.log(`Set window size for ${device}`);
             }).catch((e)=>console.log(`Could not set window size: ${e}`))
-            .leftClick('.producer-dashboard-newStudioRequest', 0, 0).then(() => {
+            .click('.producer-dashboard-newStudioRequest').then(() => {
                   console.log(`Clicked on New Studio Request.\n\n`);
             }).catch((e)=>console.error(`Could not click on New Studio Request: ${e}`))
             .getUrl().then((url) => {

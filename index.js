@@ -9,13 +9,15 @@
 const argv = require('yargs').argv;
 const chromedriver = require('chromedriver');
 
+const parser = require('./case_parser/parser');
+
 const crew = {
-      breaking_news: require('./requests/crew/types/breaking_news.js'),
-      bureau_camera: require('./requests/crew/types/bureau_camera.js'),
-      general: require('./requests/crew/types/general.js')
+      breaking_news: require('./requests/crew/types/breaking_news'),
+      bureau_camera: require('./requests/crew/types/bureau_camera'),
+      general: require('./requests/crew/types/general')
 };
 const studio = {
-      single_camera: require('./requests/studio/types/single_camera.js')
+      single_camera: require('./requests/studio/types/single_camera')
 };
 
 // Config
@@ -72,7 +74,8 @@ let checkProcess = (username, password) => {
                         type = (argv.type || argv.t || DEFAULT_PROCESS.TYPE || "").trim().toLowerCase(),
                         loop = (argv.loop || argv.l || DEFAULT_PROCESS.LOOP || "").trim().toLowerCase() === 'true',
                         count = loop ? (argv.count || argv.c || DEFAULT_PROCESS.COUNT || 1) : 1,
-                        instances = loop ? (argv.instances || argv.instance || argv.i || DEFAULT_PROCESS.INSTANCES || 1) : 1;
+                        instances = loop ? (argv.instances || argv.instance || argv.i || DEFAULT_PROCESS.INSTANCES || 1) : 1,
+                        cases = (argv.cases || argv.ca || DEFAULT_PROCESS.CASES || "").trim();
                   switch (request) {
                         case 'crew':
                               switch (type) {
@@ -110,10 +113,14 @@ let checkProcess = (username, password) => {
                               switch (type) {
                                     case 'single_camera':
                                           console.log(`Looping through studio single camera`);
-                                          studio.single_camera.loop(device, username, password, count, instances).then(() => {
-                                                console.log('Done');
+                                          parser.read(`cases/studio/types/single_camera/${cases}`).then((csv) => {
+                                                console.log(`Read cases: ${JSON.stringify(cases)}`);
                                                 resolve();
                                           });
+                                          // studio.single_camera.loop(device, username, password, count, instances).then(() => {
+                                          //       console.log('Done');
+                                          //       resolve();
+                                          // });
                                           break;
                                     case 'extend_or_bridge':
                                           break;

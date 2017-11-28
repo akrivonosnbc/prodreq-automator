@@ -14,6 +14,7 @@
             "chai": "^4.1.2",
             "chai-webdriverio": "^0.4.2",
             "chromedriver": "^2.33.1",
+            "fast-csv": "^2.4.1",
             "jquery": "^3.2.1",
             "jsdom": "^11.3.0",
             "sizzle": "^2.3.3",

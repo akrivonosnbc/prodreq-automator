@@ -11,15 +11,51 @@ const webdriverio = require('webdriverio');
 
 // Config
 const TEST_DATA = {
-
+      PHONE: '123-456-7890',
+      CC: 'Test CC',
+      DIVISION_INDEX: 1,
+      // Set OTHER to '' if NAME is found
+      SHOW_PROJECT_NAME: {
+            NAME: 'OTHER',
+            OTHER: 'Test Other'
+      },
+      BUDGET_CODE: '12345',
+      PREPARATION_START_TIME: {
+            HOUR: '12',
+            MINUTES: '00',
+            TIME_OF_DAY: 'AM'
+      },
+      START_TIME: {
+            HOUR: '2',
+            MINUTES: '00',
+            TIME_OF_DAY: 'PM'
+      },
+      END_TIME: {
+            HOUR: '11',
+            MINUTES: '00',
+            TIME_OF_DAY: 'AM'
+      },
+      SET_LOCATIONS: [
+            {
+                  LOCATION: 'rCentre',
+                  OPTION: 3
+            },
+            {
+                  LOCATION: 'field',
+                  OPTION: '123 Address St.'
+            },
+            {
+                  LOCATION: 'noLoc',
+                  OPTION: ''
+            }
+      ]
 };
 
 // SingleCamera Class
 let singleCamera = (device = 'desktop', username = null, password = null) => {
       return new Promise((resolve, reject) => {
-            new studio.Client(device, username, password)
+            let studioClient = new studio.Client(device, username, password)
                   //Initialize
-                  .pause(500)
                   .getUrl().then((url) => {
                         console.log('Created new Single Camera Live Shot from Plaza Productions Client at ' + url);
                   }).catch(()=>console.log('Could not create new Single Camera Live Shot from Plaza Productions Client'))
@@ -28,9 +64,146 @@ let singleCamera = (device = 'desktop', username = null, password = null) => {
                   }).catch((e)=>console.error(`Could not click on iFrame: ${e}`))
 
                   // Presses button to initiate Single Camera Live Shot from Plaza Productions Studio Request
-                  .click('*[title="Single Camera Live Shot from Plaza Productions"]').then(() => {
+                  .click('*[title="Plaza Production Live Shot"]').then(() => {
                         console.log(`Clicked Single Camera Live Shot from Plaza Productions.\n\n`);
                   }).catch((e)=>console.error(`Could not click Single Camera Live Shot from Plaza Productions: ${e}`))
+
+                  // Opens phone edit menu
+                  .click('.button-edit-gcr=edit').then(() => {
+                        console.log(`Clicked cell phone edit button\n\n`);
+                  }).catch((e)=>console.error(`Could not click cell phone edit button: ${e}`))
+                  .pause(250)
+
+                  // Changes value of phone inputs
+                  .setValue('*[placeholder="(XXX) XXX-XXXX"]', TEST_DATA.PHONE).then(() => {
+                        console.log(`Changed cell phone number.\n\n`);
+                  }).catch((e)=>console.error(`Could not change cell phone number: ${e}`))
+                  .click('.button-edit-gcr=save').then(() => {
+                        console.log(`Clicked cell phone save button\n\n`);
+                  }).catch((e)=>console.error(`Could not click cell phone save button: ${e}`))
+                  .pause(250)
+
+                  // Sets CC mail value
+                  .setValue('#ccmail', TEST_DATA.CC).then(() => {
+                        console.log(`Set CC mail to: ${TEST_DATA.CC}\n\n`);
+                  }).catch((e)=>console.error(`Could not set CC mail: ${e}`))
+
+                  // Sets start date as today's date
+                  .click('#studiorequest_startdate').then(() => {
+                        console.log(`Clicked on calendar button\n\n`);
+                  }).catch((e)=>console.error(`Could not click on calendar button: ${e}`))
+                  .pause(250)
+                  .click('.real-today').then(() => {
+                        console.log(`Clicked on today's date\n\n`);
+                  }).catch((e)=>console.error(`Could not click on today's date: ${e}`))
+
+                  // Selects division
+                  .selectByIndex('#division', TEST_DATA.DIVISION_INDEX).then(() => {
+                        console.log(`Selected division to index ${TEST_DATA.DIVISION_INDEX}\n\n`);
+                  }).catch((e)=>console.error(`Could not select division to index: ${e}`))
+
+                  // Sets Show or Project Name
+                  .setValue('#txtUnit-bns_0', TEST_DATA.SHOW_PROJECT_NAME.NAME).then(() => {
+                        console.log(`Set project name to: ${TEST_DATA.SHOW_PROJECT_NAME.NAME}\n\n`);
+                  }).catch((e)=>console.error(`Could not set project name: ${e}`))
+                  .pause(250)
+                  .keys('Enter').then(()=>console.log(`Enter pressed.`)).catch(e=>console.error(`Could not press enter`))
+                  .setValue('#otherdiv', TEST_DATA.SHOW_PROJECT_NAME.OTHER).then(() => {
+                        console.log(`Set project other to: ${TEST_DATA.SHOW_PROJECT_NAME.OTHER}\n\n`);
+                  })
+
+                  // Sets Budget Code
+                  .addValue('#txtbnscode_0', TEST_DATA.BUDGET_CODE).then(() => {
+                        console.log(`Set budget code to: ${TEST_DATA.BUDGET_CODE}\n\n`);
+                  }).catch((e)=>console.error(`Could not set budget code: ${e}`))
+
+                  // Sets Preparation Start Time
+                  .setValue('#preptime-hr', TEST_DATA.PREPARATION_START_TIME.HOUR).then(() => {
+                        console.log(`Set preparation start hour to ${TEST_DATA.PREPARATION_START_TIME.HOUR}.\n\n`);
+                  }).catch((e)=>console.error(`Could not set preparation start hour: ${TEST_DATA.PREPARATION_START_TIME.HOUR}`))
+                  .setValue('#preptime-min', TEST_DATA.PREPARATION_START_TIME.MINUTES).then(() => {
+                        console.log(`Set preparation start minutes to ${TEST_DATA.PREPARATION_START_TIME.MINUTES}.\n\n`);
+                  }).catch((e)=>console.error(`Could not set preparation start minutes: ${TEST_DATA.PREPARATION_START_TIME.MINUTES}`))
+                  .selectByValue('#preptime-select', TEST_DATA.PREPARATION_START_TIME.TIME_OF_DAY).then(() => {
+                        console.log(`Set preparation start time of day to ${TEST_DATA.PREPARATION_START_TIME.TIME_OF_DAY}.\n\n`);
+                  }).catch((e)=>console.error(`Could not set preparation start time of day: ${TEST_DATA.PREPARATION_START_TIME.TIME_OF_DAY}`))
+
+                  // Sets Start Time
+                  .setValue('#prodtime-hr', TEST_DATA.START_TIME.HOUR).then(() => {
+                        console.log(`Set start hour to ${TEST_DATA.START_TIME.HOUR}.\n\n`);
+                  }).catch((e)=>console.error(`Could not set start hour: ${TEST_DATA.PREPARATION_START_TIME.HOUR}`))
+                  .setValue('#prodtime-min', TEST_DATA.START_TIME.MINUTES).then(() => {
+                        console.log(`Set start minutes to ${TEST_DATA.START_TIME.MINUTES}.\n\n`);
+                  }).catch((e)=>console.error(`Could not set start minutes: ${TEST_DATA.START_TIME.MINUTES}`))
+                  .selectByValue('#prodtime-select', TEST_DATA.START_TIME.TIME_OF_DAY).then(() => {
+                        console.log(`Set start time of day to ${TEST_DATA.START_TIME.TIME_OF_DAY}.\n\n`);
+                  }).catch((e)=>console.error(`Could not set start time of day: ${TEST_DATA.START_TIME.TIME_OF_DAY}`))
+
+                  // Sets End Time
+                  .setValue('#endtime-hr', TEST_DATA.END_TIME.HOUR).then(() => {
+                        console.log(`Set end hour to ${TEST_DATA.END_TIME.HOUR}.\n\n`);
+                  }).catch((e)=>console.error(`Could not set end hour: ${TEST_DATA.END_TIME.HOUR}`))
+                  .setValue('#endtime-min', TEST_DATA.END_TIME.MINUTES).then(() => {
+                        console.log(`Set end minutes to ${TEST_DATA.END_TIME.MINUTES}.\n\n`);
+                  }).catch((e)=>console.error(`Could not set end minutes: ${TEST_DATA.END_TIME.MINUTES}`))
+                  .selectByValue('#endtime-select', TEST_DATA.END_TIME.TIME_OF_DAY).then(() => {
+                        console.log(`Set end time of day to ${TEST_DATA.END_TIME.TIME_OF_DAY}.\n\n`);
+                  }).catch((e)=>console.error(`Could not set end time of day: ${TEST_DATA.END_TIME.TIME_OF_DAY}`))
+
+                  // Click Next
+                  .click('*[next="Location"]').then(() => {
+                        console.log(`Clicked Next button to SET LOCATION CREW page\n\n`);
+                  }).catch((e)=>console.error(`Could not click Next button to SET LOCATION CREW page: ${e}`))
+
+                  // Set Location 1
+                  .click(`#${TEST_DATA.SET_LOCATIONS[0].LOCATION}`).then(() => {
+                        console.log(`Location 1 set to ${TEST_DATA.SET_LOCATIONS[0].LOCATION}\n\n`);
+                        if (TEST_DATA.SET_LOCATIONS[0].LOCATION == 'rCentre') {
+                              // Selects Rock Center Set Location
+                              studioClient.selectByIndex('#chooseSetlocation_0', TEST_DATA.SET_LOCATIONS[0].OPTION).then(() => {
+                                    console.log(`Selected set location to ${TEST_DATA.SET_LOCATIONS[0].OPTION}\n\n`);
+                              }).catch((e)=>console.error(`Could not select set location: ${e}`));
+                        } else if (TEST_DATA.SET_LOCATIONS[0].LOCATION == 'field') {
+                              studioClient.setValue('.text-box=', TEST_DATA.SET_LOCATIONS.OPTION).then(() => {
+                                    console.log(`Set address to ${TEST_DATA.SET_LOCATIONS.OPTION}.\n\n`);
+                              }).catch((e)=>console.error(`Could not set address: ${TEST_DATA.SET_LOCATIONS.OPTION}`))
+                        }
+                        if (TEST_DATA.SET_LOCATIONS[1]) studioClient.click(`#addSetLocation`);
+                  }).catch((e)=>console.error(`Could not set Location 1: ${e}`))
+
+                  .waitForExist(`#${TEST_DATA.SET_LOCATIONS[1].LOCATION}_1`, 2000)
+
+                  // Set Location 2
+                  .click(`#${TEST_DATA.SET_LOCATIONS[1].LOCATION}_1`).then(() => {
+                        console.log(`Location 2 set to ${TEST_DATA.SET_LOCATIONS[1].LOCATION}\n\n`);
+                        if (TEST_DATA.SET_LOCATIONS[1].LOCATION == 'rCentre') {
+                              // Selects Rock Center Set Location
+                              studioClient.selectByIndex('#chooseSetlocation_1', TEST_DATA.SET_LOCATIONS[1].OPTION).then(() => {
+                                    console.log(`Selected set location to ${TEST_DATA.SET_LOCATIONS[1].OPTION}\n\n`);
+                              }).catch((e)=>console.error(`Could not select set location: ${e}`));
+                        } else if (TEST_DATA.SET_LOCATIONS[1].LOCATION == 'field') {
+                              studioClient.setValue('.text-box=', TEST_DATA.SET_LOCATIONS[1].OPTION).then(() => {
+                                    console.log(`Set address to ${TEST_DATA.SET_LOCATIONS[1].OPTION}.\n\n`);
+                              }).catch((e)=>console.error(`Could not set address: ${TEST_DATA.SET_LOCATIONS[1].OPTION}`))
+                        }
+                  }).catch((e)=>console.error(`Could not set Location 2: ${e}`))
+
+                  .waitForExist(`#${TEST_DATA.SET_LOCATIONS[2].LOCATION}_2`, 2000)
+
+                  // Set Location 3
+                  .click(`#${TEST_DATA.SET_LOCATIONS[2].LOCATION}_2`).then(() => {
+                        console.log(`Location 3 set to ${TEST_DATA.SET_LOCATIONS[2].LOCATION}\n\n`);
+                        if (TEST_DATA.SET_LOCATIONS[2].LOCATION == 'rCentre') {
+                              // Selects Rock Center Set Location
+                              studioClient.selectByIndex('#chooseSetlocation_2', TEST_DATA.SET_LOCATIONS[2].OPTION).then(() => {
+                                    console.log(`Selected set location to ${TEST_DATA.SET_LOCATIONS[2].OPTION}\n\n`);
+                              }).catch((e)=>console.error(`Could not select set location: ${e}`));
+                        } else if (TEST_DATA.SET_LOCATIONS[2].LOCATION == 'field') {
+                              studioClient.setValue('.text-box=', TEST_DATA.SET_LOCATIONS[2].OPTION).then(() => {
+                                    console.log(`Set address to ${TEST_DATA.SET_LOCATIONS[2].OPTION}.\n\n`);
+                              }).catch((e)=>console.error(`Could not set address: ${TEST_DATA.SET_LOCATIONS[2].OPTION}`))
+                        }
+                  }).catch((e)=>console.error(`Could not set Location 3: ${e}`))
 
                   // Ends program
                   // .end().then(() => {
