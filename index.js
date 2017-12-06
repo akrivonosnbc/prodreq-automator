@@ -72,21 +72,45 @@ let checkProcess = (username, password) => {
                   var device = (argv.device || argv.device || DEFAULT_PROCESS.DEVICE || "").trim().toLowerCase()
                         request = (argv.request || argv.r || DEFAULT_PROCESS.REQUEST || "").trim().toLowerCase(),
                         type = (argv.type || argv.t || DEFAULT_PROCESS.TYPE || "").trim().toLowerCase(),
+                        cases = (argv.cases || argv.ca || DEFAULT_PROCESS.CASES || "").trim(),
                         loop = (argv.loop || argv.l || DEFAULT_PROCESS.LOOP || "").trim().toLowerCase() === 'true',
                         count = loop ? (argv.count || argv.c || DEFAULT_PROCESS.COUNT || 1) : 1,
-                        instances = loop ? (argv.instances || argv.instance || argv.i || DEFAULT_PROCESS.INSTANCES || 1) : 1,
-                        cases = (argv.cases || argv.ca || DEFAULT_PROCESS.CASES || "").trim();
+                        instances = loop ? (argv.instances || argv.instance || argv.i || DEFAULT_PROCESS.INSTANCES || 1) : 1;
                   switch (request) {
                         case 'crew':
                               switch (type) {
                                     case 'bureau_camera':
-                                          crew.bureau_camera.loop(device, username, password, count, instances).then(() => resolve());
+                                          parser.read(`cases/studio/types/single_camera/${cases}`).then((cs) => {
+                                                console.log(`Got cases:\n${JSON.stringify(cs, null, 2)}`);
+                                                count = cs && cs.length > 0 ? cs.length : count;
+                                                if (cs.length == 0) cs = null;
+                                                crew.bureau_camera.loop(device, username, password, count, instances).then(() => resolve()).then(() => {
+                                                      console.log('Done');
+                                                      resolve();
+                                                });
+                                          }).catch((e) => reject(e));
                                           break;
                                     case 'breaking_news':
-                                          crew.breaking_news.loop(device, username, password, count, instances).then(() => resolve());
+                                          parser.read(`cases/studio/types/single_camera/${cases}`).then((cs) => {
+                                                console.log(`Got cases:\n${JSON.stringify(cs, null, 2)}`);
+                                                count = cs && cs.length > 0 ? cs.length : count;
+                                                if (cs.length == 0) cs = null;
+                                                crew.breaking_news.loop(device, username, password, cs, count, instances).then(() => {
+                                                      console.log('Done');
+                                                      resolve();
+                                                });
+                                          }).catch((e) => reject(e));
                                           break;
                                     case 'general':
-                                          crew.general.loop(device, username, password, count, instances).then(() => resolve());
+                                          parser.read(`cases/studio/types/single_camera/${cases}`).then((cs) => {
+                                                console.log(`Got cases:\n${JSON.stringify(cs, null, 2)}`);
+                                                count = cs && cs.length > 0 ? cs.length : count;
+                                                if (cs.length == 0) cs = null;
+                                                crew.general.loop(device, username, password, cs, count, instances).then(() => {
+                                                      console.log('Done');
+                                                      resolve();
+                                                });
+                                          }).catch((e) => reject(e));
                                           break;
                                     default:
                                           reject();
@@ -112,15 +136,15 @@ let checkProcess = (username, password) => {
                         case 'studio':
                               switch (type) {
                                     case 'single_camera':
-                                          console.log(`Looping through studio single camera`);
-                                          parser.read(`cases/studio/types/single_camera/${cases}`).then((csv) => {
-                                                console.log(`Read cases: ${JSON.stringify(cases)}`);
-                                                resolve();
-                                          });
-                                          // studio.single_camera.loop(device, username, password, count, instances).then(() => {
-                                          //       console.log('Done');
-                                          //       resolve();
-                                          // });
+                                          parser.read(`cases/studio/types/single_camera/${cases}`).then((cs) => {
+                                                console.log(`Got cases:\n${JSON.stringify(cs, null, 2)}`);
+                                                count = cs && cs.length > 0 ? cs.length : count;
+                                                if (cs.length == 0) cs = null;
+                                                studio.single_camera.loop(device, username, password, cs, count, instances).then(() => {
+                                                      console.log('Done');
+                                                      resolve();
+                                                });
+                                          }).catch((e) => reject(e));
                                           break;
                                     case 'extend_or_bridge':
                                           break;

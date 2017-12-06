@@ -6,6 +6,7 @@
 */
 
 // Imports
+const fs = require("fs");
 const csv = require("fast-csv");
 
 // Config
@@ -15,21 +16,21 @@ let read = (path) => {
       return new Promise((resolve, reject) => {
             validate(path).then((path) => {
                   console.log(`Parsing file from ${path}`);
-                  let startTime = Date.now();
+                  let startTime = Date.now(), dat = [];
                   csv.fromStream(fs.createReadStream(path), {headers : true})
                   .on("data", (data) => {
-                        console.log(data);
-                        resolve(data);
+                        dat.push(data);
                   })
-                  .on("error", () => {
+                  .on("error", (data) => {
                         console.error(`Parse error after ${Date.now() - startTime}ms`);
-                        reject();
+                        return reject();
                   })
                   .on("end", () => {
                         console.log(`Parsing took ${Date.now() - startTime}ms`);
-                        reject();
+                        return resolve(dat);
                   });
-            }).catch(() => reject());
+                  stream.pipe(csvStream);
+            });
       });
 };
 

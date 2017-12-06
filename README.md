@@ -21,8 +21,9 @@ node index.js
 	--loop		=	{ true / false }
 	--count		=	{ (integer) }
 	--instances	=	{ (integer) }
+	--cases	=	{ Test Cases .csv File }
 ```
 
 *Sample Automation Script*
 
-`node index.js --username="123456789" --password="Password!123!" --device="mobile" --request="crew" --type="bureau_camera" --loop="true" --count="2" --instances="3"`
+`node index.js --username="123456789" --password="Password!123!" --device="mobile" --request="crew" --type="bureau_camera" --loop="true" --count="2" --instances="3" --cases="test"`

@@ -21,7 +21,7 @@ const WINDOW_SIZE = {
 }
 
 // Studio Client Class
-function Client (device = 'desktop', username = null, password = null) {
+function Client (device = 'desktop', username = null, password = null, cases) {
       return new driver.Client(null, username, password)
             .setViewportSize(device == 'desktop' ? WINDOW_SIZE.DESKTOP : WINDOW_SIZE.MOBILE, false).then(() => {
                   console.log(`Set window size for ${device}`);
