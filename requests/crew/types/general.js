@@ -52,10 +52,10 @@ const TEST_DATA = {
 // general Class
 let general = (device = 'desktop', username = null, password = null, cases = TEST_DATA) => {
       return new Promise((resolve, reject) => {
+            if (cases == null) cases = TEST_DATA;
+            console.log(`Got cases:\n${JSON.stringify(cases, null, 2)}`);
             new crew.Client(device, username, password)
-
                   //Initialize
-                  .pause(500)
                   .getUrl().then((url) => {
                         console.log('Created new General Client at ' + url);
                   })
@@ -314,7 +314,7 @@ let loop = (device, username, password, cases, count, instances) => {
       });
 }
 
-let loopInstance = (device, username, password, cases, count, passes, terminate = null) => {
+let loopInstance = (device, username, password, cases, count, passes = 0, terminate = null) => {
       if (count > 0) {
             cases = cases ? cases[count - cases.length] : null;
             general(device, username, password, cases).then(() => {

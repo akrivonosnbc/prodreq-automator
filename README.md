@@ -24,7 +24,7 @@ node index.js
 	--loop		=	{ true / false }
 	--count		=	{ (integer) }
 	--instances	=	{ (integer) }
-	--cases	=	{ Test Cases .csv File }
+	--cases		=	{ Test Cases .csv File }
 ```
 
 *Sample Run Script*

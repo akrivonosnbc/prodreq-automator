@@ -35,46 +35,40 @@ let run = (username, password, device = null, request = null, type = null, cases
                   device = (device || argv.device || argv.device || DEFAULT_PROCESS.DEVICE || "").trim().toLowerCase();
                   request = (request || argv.request || argv.r || DEFAULT_PROCESS.REQUEST || "").trim().toLowerCase();
                   type = (type || argv.type || argv.t || DEFAULT_PROCESS.TYPE || "").trim().toLowerCase();
-                  cases = (cases || argv.cases || argv.ca || DEFAULT_PROCESS.CASES);
+                  cases = (cases || argv.cases || argv.ca || null);
                   loop = (loop || argv.loop || argv.l || DEFAULT_PROCESS.LOOP || "").trim().toLowerCase() === 'true';
                   count = count || (loop ? (argv.count || argv.c || DEFAULT_PROCESS.COUNT || 1) : 1);
                   instances = instances || (loop ? (argv.instances || argv.instance || argv.i || DEFAULT_PROCESS.INSTANCES || 1) : 1);
                   let casesPassed = (passes) => [passes, count * instances];
+                  let runCases = (loop) => {
+                        if (cases != null) {
+                              parser.read(`cases/${request}/types/${type}/${cases}`).then((cs) => {
+                                    count = cs && cs.length > 0 ? cs.length : count;
+                                    if (cs.length == 0) cs = null;
+                                    cases = cs;
+                                    loop().then(() => resolve()).then(() => {
+                                          console.log('Done');
+                                          resolve(casesPassed(passes));
+                                    });
+                              }).catch((e) => reject(casesPassed(0)));
+                        } else {
+                              loop().then(() => {
+                                    console.log('Done');
+                                    resolve(casesPassed(passes));
+                              });
+                        }
+                  };
                   switch (request) {
                         case 'crew':
                               switch (type) {
                                     case 'bureau_camera':
-                                          parser.read(`cases/studio/types/single_camera/${cases}`).then((cs) => {
-                                                console.log(`Got cases:\n${JSON.stringify(cs, null, 2)}`);
-                                                count = cs && cs.length > 0 ? cs.length : count;
-                                                if (cs.length == 0) cs = null;
-                                                crew.bureau_camera.loop(device, username, password, count, instances).then(() => resolve()).then(() => {
-                                                      console.log('Done');
-                                                      resolve(casesPassed(passes));
-                                                });
-                                          }).catch((e) => reject(casesPassed(0)));
+                                          runCases(crew.bureau_camera.loop(device, username, password, cases, count, instances));
                                           break;
                                     case 'breaking_news':
-                                          parser.read(`cases/studio/types/single_camera/${cases}`).then((cs) => {
-                                                console.log(`Got cases:\n${JSON.stringify(cs, null, 2)}`);
-                                                count = cs && cs.length > 0 ? cs.length : count;
-                                                if (cs.length == 0) cs = null;
-                                                crew.breaking_news.loop(device, username, password, cs, count, instances).then(() => {
-                                                      console.log('Done');
-                                                      resolve(casesPassed(passes));
-                                                });
-                                          }).catch((e) => reject(casesPassed(0)));
+                                          runCases(crew.breaking_news.loop(device, username, password, cases, count, instances));
                                           break;
                                     case 'general':
-                                          parser.read(`cases/studio/types/single_camera/${cases}`).then((cs) => {
-                                                console.log(`Got cases:\n${JSON.stringify(cs, null, 2)}`);
-                                                count = cs && cs.length > 0 ? cs.length : count;
-                                                if (cs.length == 0) cs = null;
-                                                crew.general.loop(device, username, password, cs, count, instances).then(() => {
-                                                      console.log('Done');
-                                                      resolve(casesPassed(passes));
-                                                });
-                                          }).catch((e) => reject(casesPassed(0)));
+                                          runCases(crew.general.loop(device, username, password, cases, count, instances));
                                           break;
                                     default:
                                           reject(casesPassed(0));
@@ -101,15 +95,7 @@ let run = (username, password, device = null, request = null, type = null, cases
                         case 'studio':
                               switch (type) {
                                     case 'single_camera':
-                                          parser.read(`cases/studio/types/single_camera/${cases}`).then((cs) => {
-                                                console.log(`Got cases:\n${JSON.stringify(cs, null, 2)}`);
-                                                count = cs && cs.length > 0 ? cs.length : count;
-                                                if (cs.length == 0) cs = null;
-                                                studio.single_camera.loop(device, username, password, cs, count, instances).then(() => {
-                                                      console.log('Done');
-                                                      resolve(casesPassed(passes));
-                                                });
-                                          }).catch((e) => reject(casesPassed(0)));
+                                          runCases(studio.single_camera.loop(device, username, password, cases, count, instances));
                                           break;
                                     case 'extend_or_bridge':
                                           break;
