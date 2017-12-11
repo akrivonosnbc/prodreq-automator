@@ -278,22 +278,25 @@ let breakingNews = (device = 'desktop', username = null, password = null, cases 
 
 let loop = (device, username, password, cases, count, instances) => {
       return new Promise((resolve, reject) => {
+            let passes = 0;
             for (var i = 0; i < instances; i++) {
-                  loopInstance(device, username, password, cases, count, () => {
-                        if (i == instances) return resolve();
+                  loopInstance(device, username, password, cases, count, 0, (ps) => {
+                        passes += ps;
+                        if (i == instances) return resolve(passes);
                   });
             }
       });
 }
 
-let loopInstance = (device, username, password, cases, count, terminate = null) => {
+let loopInstance = (device, username, password, cases, count, passes, terminate = null) => {
       if (count > 0) {
+            cases = cases ? cases[count - cases.length] : null;
             breakingNews(device, username, password, cases).then(() => {
-                  return loopInstance(device, username, password, cases, --count, terminate);
+                  return loopInstance(device, username, password, cases, --count, ++passes, terminate);
             }).catch(() => {
-                  return loopInstance(device, username, password, cases, --count, terminate);
+                  return loopInstance(device, username, password, cases, --count, passes, terminate);
             });
-      } else if (terminate) return terminate();
+      } else if (terminate) return terminate(passes);
 }
 
 module.exports = {
